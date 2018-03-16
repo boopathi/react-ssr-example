@@ -17,7 +17,7 @@ app.use(express.static("build"));
 app.get("/*", (req, res) => {
   const serverEntry = require("./build/server").default;
 
-  serverEntry().then(({ html, state }) => {
+  serverEntry(req).then(({ html, state }) => {
     res.end(template(html, state));
   });
 });

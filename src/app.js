@@ -1,5 +1,6 @@
 import { createElement as h, Component } from "react";
 import { asyncComponent } from "react-async-component";
+import { getTheme } from "./theme";
 
 const AsyncComponent = asyncComponent({
   resolve() {
@@ -13,12 +14,16 @@ const AsyncComponent = asyncComponent({
 export default class extends Component {
   constructor(...args) {
     super(...args);
+
     this.state = {
-      async2: null
+      async2: null,
+      themeName: this.props.themeName,
+      theme: this.props.theme
     };
   }
+
   render() {
-    return h("div", {}, [
+    return h(this.state.theme, {}, [
       h(
         "div",
         {
@@ -32,16 +37,22 @@ export default class extends Component {
                 return "Loading2 ...";
               }
             });
-            this.setState({ async2 });
+
+            const themeName = this.state.themeName === "foo" ? "bar" : "foo";
+            console.log(themeName);
+
+            const theme = getTheme(themeName);
+
+            window.history.pushState(null, null, "/?theme=" + themeName);
+
+            this.setState({ async2, themeName, theme });
           }
         },
-        [
-          "header",
-          h(AsyncComponent, {
-            key: "async"
-          }),
-          this.state.async2 ? h(this.state.async2, { key: "async2" }) : null
-        ]
+        "header",
+        h(AsyncComponent, {
+          key: "async"
+        }),
+        this.state.async2 ? h(this.state.async2, { key: "async2" }) : null
       )
     ]);
   }

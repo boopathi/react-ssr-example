@@ -6,15 +6,22 @@ import {
   createAsyncContext
 } from "react-async-component";
 import asyncBootstrapper from "react-async-bootstrapper";
+import { getTheme } from "./theme";
 
-export default () => {
+export default req => {
   const asyncContext = createAsyncContext();
+
+  const themeName = req.query ? req.query.theme : "foo";
+
   const app = h(
     AsyncComponentProvider,
     {
       asyncContext
     },
-    h(root)
+    h(root, {
+      themeName,
+      theme: getTheme(themeName)
+    })
   );
 
   return asyncBootstrapper(app).then(() => {
