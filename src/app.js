@@ -1,6 +1,6 @@
 import { createElement as h, Component } from "react";
 import { asyncComponent } from "react-async-component";
-import { getTheme } from "./theme";
+import { getTheme, getClientTheme } from "./theme";
 
 const AsyncComponent = asyncComponent({
   resolve() {
@@ -17,7 +17,6 @@ export default class extends Component {
 
     this.state = {
       async2: null,
-      themeName: this.props.themeName,
       theme: this.props.theme
     };
   }
@@ -38,13 +37,10 @@ export default class extends Component {
               }
             });
 
-            const themeName = this.state.themeName === "foo" ? "bar" : "foo";
-            console.log(themeName);
-
+            const themeName =
+              getClientTheme(window.location.href) === "foo" ? "bar" : "foo";
             const theme = getTheme(themeName);
-
             window.history.pushState(null, null, "/?theme=" + themeName);
-
             this.setState({ async2, themeName, theme });
           }
         },

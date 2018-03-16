@@ -7,19 +7,9 @@ import {
   asyncComponent
 } from "react-async-component";
 import asyncBootstrapper from "react-async-bootstrapper";
-import { getTheme } from "./theme";
+import { getTheme, getClientTheme } from "./theme";
 
 const state = window.__MYSTATE__;
-
-const url = new URL(window.location.href);
-
-let themeName = "foo";
-for (const [key, value] of url.searchParams) {
-  if (key === "theme") {
-    themeName = value;
-    break;
-  }
-}
 
 const app = h(
   AsyncComponentProvider,
@@ -27,8 +17,7 @@ const app = h(
     rehydrateState: state
   },
   h(root, {
-    themeName,
-    theme: getTheme(themeName)
+    theme: getTheme(getClientTheme(window.location.href))
   })
 );
 
